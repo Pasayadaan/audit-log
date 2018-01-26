@@ -57,8 +57,8 @@ public class AuditLogControllerTest {
 
         thrown.expect(APIAuthenticationException.class);
         thrown.expectMessage("User is not logged in");
-        auditLogController.getLogs("username", "patientId",
-                "2017-03-22T18:30:00.000Z", 1, null, null);
+        auditLogController.getLogs("username", "patientId", "MODULE_LABEL_LOGIN_KEY",
+                "2017-03-22T18:30:00.000Z","2017-03-22T18:30:00.000Z", 1, null, null);
         fail();
     }
 
@@ -69,8 +69,8 @@ public class AuditLogControllerTest {
 
         thrown.expect(APIException.class);
         thrown.expectMessage("User is logged in but does not have sufficient privileges");
-        auditLogController.getLogs("username", "patientId",
-                "2017-03-22T18:30:00.000Z", 1, null, null);
+        auditLogController.getLogs("username", "patientId", "MODULE_LABEL_LOGIN_KEY",
+                "2017-03-22T18:30:00.000Z", "2017-03-22T18:30:00.000Z", 1, null, null);
         fail();
     }
 
@@ -79,13 +79,13 @@ public class AuditLogControllerTest {
         Date startDateTime = DateUtil.convertToLocalDateFromUTC("2017-03-22T18:30:00.000Z");
         when(userContext.isAuthenticated()).thenReturn(true);
         when(userContext.hasPrivilege("admin")).thenReturn(true);
-        when(auditLogService.getLogs("username", "patientId", startDateTime,
+        when(auditLogService.getLogs("username", "patientId", "MODULE_LABEL_LOGIN_KEY", startDateTime, startDateTime,
                 1, null, false)).thenReturn(new ArrayList<>());
 
-        ArrayList<SimpleObject> logs = auditLogController.getLogs("username", "patientId", "2017-03-22T18:30:00.000Z", 1, false, false);
+        ArrayList<SimpleObject> logs = auditLogController.getLogs("username", "patientId", "MODULE_LABEL_LOGIN_KEY", "2017-03-22T18:30:00.000Z", "2017-03-22T18:30:00.000Z", 1, false, false);
         assertEquals(0, logs.size());
         verify(auditLogService, times(1))
-                .getLogs("username", "patientId", startDateTime, 1, false, false);
+                .getLogs("username", "patientId", "MODULE_LABEL_LOGIN_KEY", startDateTime, startDateTime, 1, false, false);
 
     }
 

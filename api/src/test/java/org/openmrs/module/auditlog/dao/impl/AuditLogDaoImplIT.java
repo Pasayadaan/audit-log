@@ -40,7 +40,7 @@ public class AuditLogDaoImplIT extends BaseIntegrationTest {
     @Test
     public void shouldGiveAllLogsCreatedAfterGivenDateTime() throws Exception {
         Date startDateTime = DateUtil.convertToDate("2017-03-15T16:57:09.0Z", DateUtil.DateFormatType.UTC);
-        List<AuditLog> logs = auditLogDao.getLogs(null, null, startDateTime, null, false, false);
+        List<AuditLog> logs = auditLogDao.getLogs(null, null, null, startDateTime,startDateTime, null, false, false);
         assertEquals(2, logs.size());
         AuditLog auditLog_1 = logs.get(0);
         AuditLog auditLog_2 = logs.get(1);
@@ -64,7 +64,7 @@ public class AuditLogDaoImplIT extends BaseIntegrationTest {
 
     @Test
     public void shouldGivePreviousLogsFromGivenIndex() throws Exception {
-        List<AuditLog> logs = auditLogDao.getLogs(null, null, null, 5, true, false);
+        List<AuditLog> logs = auditLogDao.getLogs(null, null, null, null, null, 5, true, false);
         assertEquals(2, logs.size());
         AuditLog auditLog_1 = logs.get(0);
         AuditLog auditLog_2 = logs.get(1);
@@ -88,7 +88,7 @@ public class AuditLogDaoImplIT extends BaseIntegrationTest {
 
     @Test
     public void shouldGivePreviousLogsFromGivenIndexEvenIfSomeEventsAreDeletedInBetween() throws Exception {
-        List<AuditLog> logs = auditLogDao.getLogs(null, null, null, 4, true, false);
+        List<AuditLog> logs = auditLogDao.getLogs(null, null, null, null, null, 4, true, false);
         assertEquals(2, logs.size());
         AuditLog auditLog_1 = logs.get(0);
         AuditLog auditLog_2 = logs.get(1);
@@ -113,7 +113,7 @@ public class AuditLogDaoImplIT extends BaseIntegrationTest {
 
     @Test
     public void shouldGiveNextLogsFromGivenIndex() throws Exception {
-        List<AuditLog> logs = auditLogDao.getLogs(null, null, null, 2, false, false);
+        List<AuditLog> logs = auditLogDao.getLogs(null, null, null, null, null, 2, false, false);
         assertEquals(2, logs.size());
         AuditLog auditLog_1 = logs.get(0);
         AuditLog auditLog_2 = logs.get(1);
@@ -138,7 +138,7 @@ public class AuditLogDaoImplIT extends BaseIntegrationTest {
     @Test
     public void getLogs_shouldGiveLogsInDescendingIfItIsDefaultView() throws Exception {
         AuditLogDaoImpl.LIMIT = 3;
-        List<AuditLog> logs = auditLogDao.getLogs(null, null, null, null, false, true);
+        List<AuditLog> logs = auditLogDao.getLogs(null, null, null, null, null, null, false, true);
         assertEquals(3, logs.size());
         AuditLog auditLog_1 = logs.get(0);
         AuditLog auditLog_2 = logs.get(1);
@@ -171,7 +171,7 @@ public class AuditLogDaoImplIT extends BaseIntegrationTest {
 
     @Test
     public void getLogs_shouldGiveAuditLogsFilterByGivenUsername() throws Exception {
-        List<AuditLog> logs = auditLogDao.getLogs("batman", null, null, null, false, false);
+        List<AuditLog> logs = auditLogDao.getLogs("batman", null, null, null, null, null, false, false);
         assertEquals(1, logs.size());
         AuditLog auditLog = logs.get(0);
 
@@ -187,7 +187,7 @@ public class AuditLogDaoImplIT extends BaseIntegrationTest {
     @Test
     public void getLogs_shouldGiveAuditLogsFilterByGivenPatientId() throws Exception {
 
-        List<AuditLog> logs = auditLogDao.getLogs(null, "GAN200000", null, null, false, false);
+        List<AuditLog> logs = auditLogDao.getLogs(null, "GAN200000", null, null, null, null, false, false);
         assertEquals(2, logs.size());
         AuditLog auditLog_1 = logs.get(0);
         AuditLog auditLog_2 = logs.get(1);
@@ -211,13 +211,13 @@ public class AuditLogDaoImplIT extends BaseIntegrationTest {
 
     @Test
     public void getLogs_shouldGiveEmptyListIfTheGivePatientIdentifierIsInvalid() throws Exception {
-        List<AuditLog> logs = auditLogDao.getLogs(null, "GAN200100", null, null, false, false);
+        List<AuditLog> logs = auditLogDao.getLogs(null, "GAN200100", null, null, null, null, false, false);
         assertEquals(0, logs.size());
     }
 
     @Test
     public void getLogs_shouldGiveEmptyListIfTheGiveUsernameIsInvalid() throws Exception {
-        List<AuditLog> logs = auditLogDao.getLogs("antman", "GAN200000", null, null, false, false);
+        List<AuditLog> logs = auditLogDao.getLogs("antman", "GAN200000", null, null, null, null, false, false);
         assertEquals(0, logs.size());
     }
 
@@ -234,10 +234,10 @@ public class AuditLogDaoImplIT extends BaseIntegrationTest {
         auditLog.setEventType("event1");
         Date now = new Date();
         auditLog.setDateCreated(now);
-        int countBefore = auditLogDao.getLogs(user.getUsername(), "SEM200000",null,null,false,false).size();
+        int countBefore = auditLogDao.getLogs(user.getUsername(), "SEM200000",null,null,null,null,false,false).size();
         auditLogDao.saveAuditLog(auditLog);
 
-        int countAfter = auditLogDao.getLogs(user.getUsername(), "SEM200000", null, null, false, false).size();
+        int countAfter = auditLogDao.getLogs(user.getUsername(), "SEM200000", null, null, null, null, false, false).size();
         assertEquals(1, countAfter-countBefore);
     }
 }

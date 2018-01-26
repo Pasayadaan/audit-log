@@ -99,10 +99,10 @@ public class AuditLogServiceImplTest {
         mockAuditLogs.add(auditLog_1);
         mockAuditLogs.add(auditLog_2);
 
-        when(auditLogDao.getLogs("username", "patientId", null, 1,
+        when(auditLogDao.getLogs("username", "patientId", null, null, null, 1,
                 false, false)).thenReturn(mockAuditLogs);
-        ArrayList<SimpleObject> logs = auditLogService.getLogs("username", "patientId",
-                null, 1, false, false);
+        ArrayList<SimpleObject> logs = auditLogService.getLogs("username", "patientId", null,
+                null, null, 1, false, false);
         assertEquals(2, logs.size());
         SimpleObject auditLogResponse_1 = logs.get(0);
         SimpleObject auditLogResponse_2 = logs.get(1);

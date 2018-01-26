@@ -29,7 +29,7 @@ public class AuditLogDaoImpl implements AuditLogDao {
     protected static Integer LIMIT = 50;
 
     @Override
-    public List<AuditLog> getLogs(String username, String patientIdentifier, Date startDateTime,
+    public List<AuditLog> getLogs(String username, String patientIdentifier, String moduleFilter, Date startDateTime, Date endDateTime,
                                   Integer lastAuditLogId, Boolean prev, Boolean defaultView) {
         // prev will be always not null boolean value
         List<AuditLog> logs = new ArrayList<AuditLog>();
@@ -47,6 +47,9 @@ public class AuditLogDaoImpl implements AuditLogDao {
         if (startDateTime != null) {
             criteria.add(Restrictions.ge("dateCreated", startDateTime));
         }
+        if (endDateTime != null) {
+            criteria.add(Restrictions.le("dateCreated", endDateTime));
+        }
         if (username != null) {
             criteria.add(Restrictions.eq("user.username", username));
         }
@@ -57,6 +60,9 @@ public class AuditLogDaoImpl implements AuditLogDao {
                 return logs;
             }
             criteria.add(Restrictions.eq("patient", patients.get(0)));
+        }
+        if (moduleFilter != null) {
+            criteria.add(Restrictions.eq("module", moduleFilter));
         }
 
         logs.addAll(criteria.list());

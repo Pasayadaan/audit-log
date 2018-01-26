@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+
+    <changeSet id="create-auditlogtable-201705231130" author="Shruthi,Pushpa">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="audit_log" />
+            </not>
+        </preConditions>
+
+        <sql>
+            CREATE TABLE audit_log (
+            audit_log_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+            user_id INT(11) NOT NULL,
+            patient_id INT(11),
+            event_type VARCHAR(100) NOT NULL,
+            message LONGBLOB NOT NULL,
+            date_created DATETIME NOT NULL,
+            uuid VARCHAR(38) NOT NULL UNIQUE,
+
+            FOREIGN KEY fk_patient_id(patient_id) REFERENCES patient(patient_id),
+            FOREIGN KEY fk_user_id(user_id) REFERENCES users(user_id)
+            );
+
+        </sql>
+    </changeSet>
+
+    <changeSet id="modify-auditlogtable-201705231230" author="Shashi">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="audit_log" />
+        </preConditions>
+
+        <sql>
+            ALTER TABLE audit_log MODIFY user_id INT(11);
+        </sql>
+    </changeSet>
+
+    <changeSet id="add-module-column-to-auditlogtable-201706160509" author="Shruthi P,Pushpa">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="audit_log" />
+            <not><columnExists tableName="audit_log" columnName="module" /></not>
+        </preConditions>
+        <sql>
+            ALTER TABLE audit_log ADD COLUMN module VARCHAR(100);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

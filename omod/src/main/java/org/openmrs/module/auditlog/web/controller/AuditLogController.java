@@ -29,7 +29,9 @@ public class AuditLogController {
     @ResponseBody
     public ArrayList<SimpleObject> getLogs(@RequestParam(value = "username", required = false) String username,
                                            @RequestParam(value = "patientId", required = false) String patientId,
+                                           @RequestParam(value = "moduleFilter", required = false) String moduleFilter,
                                            @RequestParam(value = "startFrom", required = false) String startFrom,
+                                           @RequestParam(value = "endTo", required = false) String endTo,
                                            @RequestParam(value = "lastAuditLogId", required = false) Integer lastAuditLogId,
                                            @RequestParam(value = "prev", required = false, defaultValue = "false") Boolean prev,
                                            @RequestParam(value = "defaultView", required = false, defaultValue = "false") Boolean defaultView) throws ParseException {
@@ -37,7 +39,8 @@ public class AuditLogController {
         if (userContext.isAuthenticated()) {
             if (userContext.hasPrivilege("admin")) {
                 Date startDateTime = DateUtil.convertToLocalDateFromUTC(startFrom);
-                return auditLogService.getLogs(username, patientId, startDateTime, lastAuditLogId, prev, defaultView);
+                Date endDateTime = DateUtil.convertToLocalDateFromUTC(endTo);                
+                return auditLogService.getLogs(username, patientId, moduleFilter, startDateTime, endDateTime, lastAuditLogId, prev, defaultView);
             } else {
                 throw new APIException("User is logged in but does not have sufficient privileges");
             }

@@ -30,8 +30,8 @@ public class AuditLogServiceImpl implements AuditLogService {
         this.auditLogDao = auditLogDao;
     }
 
-    public ArrayList<SimpleObject> getLogs(String username, String patientId, Date startDateTime, Integer lastAuditLogId, Boolean prev, Boolean defaultView) {
-        List<AuditLog> auditLogs = auditLogDao.getLogs(username, patientId, startDateTime, lastAuditLogId, prev, defaultView);
+    public ArrayList<SimpleObject> getLogs(String username, String patientId, String moduleFilter, Date startDateTime, Date endDateTime, Integer lastAuditLogId, Boolean prev, Boolean defaultView) {
+        List<AuditLog> auditLogs = auditLogDao.getLogs(username, patientId, moduleFilter, startDateTime, endDateTime, lastAuditLogId, prev, defaultView);
         return (ArrayList<SimpleObject>) (auditLogs.stream().map(AuditLog::map).collect(Collectors.toList()));
     }
 
